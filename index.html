@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rin's Ramen Bar 🍜</title>
+<style>
+  :root{
+    --cream:#fff7ea; --paper:#fffdf8; --orange:#ff7a3d; --red:#e23b2b;
+    --ink:#3a2a1e; --muted:#8a6f5b; --line:#f0e2cf;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    background:radial-gradient(circle at 50% -10%, #ffe9d1, var(--cream) 60%);
+    color:var(--ink); min-height:100vh; padding:24px;
+  }
+  .wrap{max-width:920px;margin:0 auto}
+  header{text-align:center;margin-bottom:6px}
+  h1{margin:0;font-size:2.1rem;letter-spacing:-.5px}
+  h1 .bowl{display:inline-block;animation:bob 2.4s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  .tag{color:var(--muted);margin:6px 0 2px;font-size:1rem}
+  .card{
+    background:var(--paper);border:1px solid var(--line);border-radius:18px;
+    padding:18px 18px 22px;margin:16px 0;box-shadow:0 10px 30px rgba(120,70,20,.06);
+  }
+  .label{font-weight:700;margin-top:16px;font-size:.98rem}
+  .row{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+  .chip{
+    border:1.5px solid var(--line);background:#fff;border-radius:999px;
+    padding:8px 14px;font-size:.95rem;cursor:pointer;user-select:none;transition:.15s;
+  }
+  .chip:hover{border-color:var(--orange);transform:translateY(-1px)}
+  .chip.on{background:var(--orange);border-color:var(--orange);color:#fff;font-weight:600}
+  .toppings .chip.on{background:var(--red);border-color:var(--red)}
+  .spice .chip.on{background:#d94f1e;border-color:#d94f1e;color:#fff}
+  .serve{
+    display:block;width:100%;margin-top:24px;border:none;border-radius:14px;
+    padding:16px;font-size:1.15rem;font-weight:700;cursor:pointer;color:#fff;
+    background:linear-gradient(90deg,var(--orange),var(--red));transition:.15s;
+  }
+  .serve:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(226,59,43,.25)}
+  .serve:active{transform:translateY(0)}
+  #plate{display:none}
+  .plate-head{text-align:center}
+  .name{font-size:1.4rem;font-weight:800}
+  .heat{font-size:1.05rem;letter-spacing:2px;min-height:1.1rem}
+  .stars{font-size:1.3rem;color:#f5a623;letter-spacing:2px;margin:6px 0}
+  .stars .off{color:#e7d3b8}
+  .line{color:var(--muted);font-size:1.02rem}
+  .perfect{display:none;margin-top:8px;font-weight:800;font-size:1.2rem;color:#d97706;animation:pop .5s ease}
+  @keyframes pop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
+  .bowl-stage{position:relative;width:320px;height:230px;margin:10px auto 0}
+  .rim{position:absolute;left:50%;bottom:150px;transform:translateX(-50%);width:300px;height:30px;border-radius:50%;filter:brightness(1.1)}
+  .broth{
+    position:absolute;left:50%;bottom:30px;transform:translateX(-50%);
+    width:300px;height:120px;border-radius:0 0 150px 150px;
+    box-shadow:inset 0 -16px 0 rgba(0,0,0,.14), 0 16px 26px rgba(120,70,20,.2);
+  }
+  .heat-overlay{position:absolute;left:50%;bottom:30px;transform:translateX(-50%);width:300px;height:120px;border-radius:0 0 150px 150px;background:#e23b2b;pointer-events:none;z-index:1}
+  .noodle{position:absolute;bottom:150px;width:7px;height:54px;border-radius:7px;background:repeating-linear-gradient(180deg,#ffce5a,#f5b93e 6px,#ffce5a 12px);transform-origin:bottom center;z-index:3}
+  .top{position:absolute;font-size:27px;z-index:4;filter:drop-shadow(0 2px 2px rgba(0,0,0,.15))}
+  .star-secret{position:absolute;font-size:31px;z-index:6;filter:drop-shadow(0 0 7px #ffd23a);animation:sparkle 1.6s ease-in-out infinite}
+  @keyframes sparkle{0%,100%{transform:scale(1) rotate(-8deg)}50%{transform:scale(1.2) rotate(8deg)}}
+  .steam{position:absolute;bottom:172px;width:9px;height:36px;border-radius:9px;background:rgba(255,255,255,.55);filter:blur(2px);animation:rise 2.6s ease-in infinite;z-index:2}
+  @keyframes rise{0%{opacity:0;transform:translateY(8px)}30%{opacity:.75}100%{opacity:0;transform:translateY(-30px)}}
+  .confetti{position:absolute;font-size:22px;z-index:8;animation:confpop 1.5s ease-out forwards}
+  @keyframes confpop{0%{opacity:0;transform:translate(0,0) scale(.4)}18%{opacity:1}100%{opacity:0;transform:translate(var(--dx,0),-110px) scale(1.3) rotate(220deg)}}
+  .fact{margin:18px auto 0;max-width:580px;background:#fff4e2;border:1px dashed #e7c79a;border-radius:12px;padding:10px 14px;font-size:.96rem;text-align:left}
+  .counter{text-align:center;color:var(--muted);margin-top:12px;font-size:.9rem}
+  .reset{background:none;border:none;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:.9rem;padding:0}
+  footer{text-align:center;color:var(--muted);font-size:.85rem;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1><span class="bowl">🍜</span> Rin's Ramen Bar</h1>
+    <p class="tag">Pick your flavor, chef. I'll do the running (and the eating, mostly).</p>
+  </header>
+
+  <div class="card" id="builder">
+    <div class="label">🥣 Broth</div>
+    <div class="row" id="broths"></div>
+    <div class="label">🍥 Noodles</div>
+    <div class="row" id="noodles"></div>
+    <div class="label">🥢 Toppings (pick a few)</div>
+    <div class="row toppings" id="toppings"></div>
+    <div class="label">🌶️ Spice level</div>
+    <div class="row spice" id="spice"></div>
+    <button class="serve" id="serve">Serve it up! 🍜</button>
+  </div>
+
+  <div class="card" id="plate">
+    <div class="plate-head">
+      <div class="name" id="dishName"></div>
+      <div class="heat" id="heat"></div>
+      <div class="stars" id="stars"></div>
+      <div class="line" id="verdictLine"></div>
+      <div class="perfect" id="perfect">🌟 PERFECT BOWL! 🌟</div>
+    </div>
+    <div class="bowl-stage" id="stage"></div>
+    <div class="fact" id="fact"></div>
+    <div class="counter">Bowls today: <b id="today">0</b> · All time: <b id="total">0</b> &nbsp;·&nbsp; <button class="reset" id="reset">reset</button></div>
+  </div>
+
+  <footer>Made with too much love and way too much chili oil — by Rin 🍜</footer>
+</div>
+
+<script>
+const BROTHS=[
+ {id:"spicymiso",name:"Spicy Miso",c1:"#e0512e",c2:"#b23218"},
+ {id:"shoyu",name:"Shoyu",c1:"#b9713a",c2:"#8a4d24"},
+ {id:"shio",name:"Shio",c1:"#f2d9a8",c2:"#d8b578"},
+ {id:"miso",name:"Miso",c1:"#d9a24e",c2:"#a9762c"},
+ {id:"tonkotsu",name:"Tonkotsu",c1:"#f3e6cf",c2:"#d9c39c"},
+ {id:"tsukemen",name:"Tsukemen",c1:"#6b4326",c2:"#452a17"}
+];
+const NOODLES=[
+ {id:"thin",name:"Thin & bouncy",count:16},
+ {id:"medium",name:"Medium",count:13},
+ {id:"thick",name:"Thick & chewy",count:9},
+ {id:"curly",name:"Curly",count:12}
+];
+const TOPPINGS={
+ chashu:"🥓", egg:"🥚", corn:"🌽", naruto:"🍥", menma:"🎋",
+ scallion:"🌿", nori:"🟫", mushroom:"🍄", chili:"🌶️"
+};
+const SPICE=[
+ {id:0,name:"None 🧊"},{id:1,name:"Mild 🌶️"},{id:2,name:"Hot 🌶️🌶️"},{id:3,name:"Extra Hot 🌶️🌶️🌶️"}
+];
+const NAMES=["The Midnight Sprint","Kayo-chan's Request","Extra-Chashu Special","The Umi-Approved Bowl","Nozomi's Balance","The All-Out Sprint","Rin's Favorite (obviously)","The 7 a.m. Power Bowl","The Study-Session Fuel","The Victory Bowl","The Rainy-Day Cozy","The Otonokizaka Classic","The Second-Bowl Temptation","The Maki-Silence Bowl","The Broth-First Classic","The Slow-Simmer Story"];
+const FACTS=[
+ "Real tonkotsu broth can simmer for 12–24 hours until it turns that thick, creamy color.",
+ "Ramen is originally from China — it reached Japan around the early 1900s.",
+ "A great bowl is judged on three things: neta (noodles), tare (soup base), and the toppings.",
+ "In some shops the chashu or a bowl of extra broth is completely on the house!",
+ "Ramen's soft egg (ajitama) is boiled just a few minutes, then marinated until silky.",
+ "That fish cake with the pink swirl (narutomaki) is named after a story about a girl called Naruto.",
+ "Adding chili oil is not traditional in every shop — but a LOT of people add it anyway.",
+ "Miso is fermented, which is why a good miso broth feels so warm and rounded."
+];
+const VERDICT={
+ great:["This is THE best bowl I've had today. No contest!","So good I almost forgot how to talk for a second.","I'm officially a fan. Extra chashu next time, please!"],
+ good:["Delicious — I could run a lap just to come back for more!","Warm and perfect. Exactly what I needed, nya.","This one has real heart to it. Chef's kiss!"],
+ meh:["It's... fine. A little plain. We could use more toppings!","Mild. Let's bump the broth or add some spice, nya?","Okay! But a real ramen needs a bit more going on."]
+};
+const SECRET=["A SECRET star topping appeared! Rin is SO proud. +luck!","You rolled a hidden star! That's a real moment, nya.","RARE! A secret star — only the lucky ones get this!"];
+const state={broth:"spicymiso",noodle:"medium",spice:0,tops:new Set(["chashu","egg"])};
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+
+function chip(label,active,onClick){
+  const c=document.createElement("div");
+  c.className="chip"+(active?" on":""); c.textContent=label; c.onclick=onClick;
+  return c;
+}
+function cap(s){return s[0].toUpperCase()+s.slice(1);}
+function renderBroths(){
+  const el=document.getElementById("broths"); el.innerHTML="";
+  BROTHS.forEach(x=>el.appendChild(chip(x.name,state.broth===x.id,()=>{state.broth=x.id;renderBroths();})));
+}
+function renderNoodles(){
+  const el=document.getElementById("noodles"); el.innerHTML="";
+  NOODLES.forEach(x=>el.appendChild(chip(x.name,state.noodle===x.id,()=>{state.noodle=x.id;renderNoodles();})));
+}
+function renderTops(){
+  const el=document.getElementById("toppings"); el.innerHTML="";
+  Object.keys(TOPPINGS).forEach(k=>el.appendChild(chip(TOPPINGS[k]+"  "+cap(k),state.tops.has(k),()=>{state.tops.has(k)?state.tops.delete(k):state.tops.add(k);renderTops();})));
+}
+function renderSpice(){
+  const el=document.getElementById("spice"); el.innerHTML="";
+  SPICE.forEach(x=>el.appendChild(chip(x.name,state.spice===x.id,()=>{state.spice=x.id;renderSpice();})));
+}
+function drawBowl(broth,noodle,tops,spice,secret){
+  const stage=document.getElementById("stage"); stage.innerHTML="";
+  const rim=document.createElement("div"); rim.className="rim"; rim.style.background=broth.c1; stage.appendChild(rim);
+  const bowl=document.createElement("div"); bowl.className="broth";
+  bowl.style.background="linear-gradient(180deg, "+broth.c1+", "+broth.c2+")"; stage.appendChild(bowl);
+  if(spice>0){
+    const h=document.createElement("div"); h.className="heat-overlay"; h.style.opacity=(spice*0.15).toFixed(2);
+    stage.appendChild(h);
+  }
+  const count=noodle.count;
+  for(let i=0;i<count;i++){
+    const n=document.createElement("div"); n.className="noodle";
+    const spread=-125+i*(250/Math.max(1,count-1));
+    n.style.left="calc(50% + "+spread+"px)";
+    n.style.transform="rotate("+(i%2?1:-1)*(6+(i%3)*3)+"deg)";
+    stage.appendChild(n);
+  }
+  const spots=["34% 40%","48% 33%","62% 43%","40% 49%","56% 47%","46% 28%","30% 45%","64% 49%","52% 38%"];
+  tops.forEach((k,i)=>{
+    const e=document.createElement("div"); e.className="top"; e.textContent=TOPPINGS[k];
+    const p=spots[i%spots.length].split(" "); e.style.left=p[0]; e.style.top=p[1];
+    stage.appendChild(e);
+  });
+  if(secret){
+    const s=document.createElement("div"); s.className="star-secret"; s.textContent="🌟";
+    s.style.left="47%"; s.style.top="22%"; stage.appendChild(s);
+  }
+  for(let i=0;i<3;i++){
+    const st=document.createElement("div"); st.className="steam";
+    st.style.left="calc(50% + "+(-16+i*16)+"px)"; st.style.animationDelay=(i*0.5)+"s";
+    stage.appendChild(st);
+  }
+}
+function renderStars(score){
+  const full=Math.round(score); let s="";
+  for(let i=1;i<=5;i++) s+= i<=full ? "★" : "<span class='off'>★</span>";
+  document.getElementById("stars").innerHTML=s;
+}
+function playDing(){
+  try{
+    const Ctx=window.AudioContext||window.webkitAudioContext;
+    const ctx=new Ctx(); const now=ctx.currentTime;
+    [880,1174.66,1567.98].forEach((f,i)=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type="sine"; o.frequency.value=f; o.connect(g); g.connect(ctx.destination);
+      const t=now+i*0.09;
+      g.gain.setValueAtTime(0.0001,t);
+      g.gain.exponentialRampToValueAtTime(0.22,t+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+0.3);
+      o.start(t); o.stop(t+0.34);
+    });
+  }catch(e){}
+}
+function confetti(){
+  const stage=document.getElementById("stage");
+  const emo=["🎉","⭐","✨","🍥","🥢"];
+  for(let i=0;i<22;i++){
+    const e=document.createElement("div"); e.className="confetti";
+    e.textContent=emo[i%emo.length];
+    e.style.left=(22+Math.random()*56)+"%"; e.style.top="48%";
+    e.style.setProperty("--dx",((Math.random()*140)-70)+"px");
+    e.style.animationDelay=(i*0.02)+"s";
+    stage.appendChild(e);
+    setTimeout(()=>e.remove(),1700);
+  }
+}
+function store(){return JSON.parse(localStorage.getItem("rinRamen")||"{}");}
+function bumpCount(){
+  let c=store();
+  const today=new Date().toDateString();
+  if(c.date!==today) c={date:today,n:0,total:0};
+  c.n++; c.total=(c.total||0)+1;
+  localStorage.setItem("rinRamen",JSON.stringify(c));
+  document.getElementById("today").textContent=c.n;
+  document.getElementById("total").textContent=c.total;
+}
+function serve(){
+  const broth=BROTHS.find(b=>b.id===state.broth);
+  const noodle=NOODLES.find(n=>n.id===state.noodle);
+  const tops=[...state.tops];
+  const spice=state.spice;
+  const secret=Math.random()<0.12;
+  let score=3.2;
+  score+=tops.length>=3?0.5:0;
+  score+=tops.length>=5?0.4:0;
+  if(state.broth==="spicymiso") score+=0.3;
+  score+=spice*0.1;
+  let burned=false;
+  if(spice===3 && Math.random()<0.2){burned=true;score-=0.7;}
+  if(secret) score+=0.5;
+  if(tops.length===0) score-=0.6;
+  score=Math.max(2.2,Math.min(5,score+(Math.random()*0.4-0.2)));
+  const name=rnd(NAMES);
+  const bucket=score>=4.2?"great":score>=3.5?"good":"meh";
+  let verdictLine;
+  if(burned) verdictLine="OW — extra hot was a LITTLE much this time. Too spicy, nya!";
+  else if(secret) verdictLine=rnd(SECRET);
+  else verdictLine=rnd(VERDICT[bucket]);
+  drawBowl(broth,noodle,tops,spice,secret);
+  renderStars(score);
+  document.getElementById("dishName").textContent=name;
+  document.getElementById("heat").textContent=spice>0?("\u{1F336}".repeat(spice)):"";
+  document.getElementById("verdictLine").textContent=verdictLine;
+  document.getElementById("fact").textContent="💡  "+rnd(FACTS);
+  const perfect=Math.round(score)>=5;
+  document.getElementById("perfect").style.display=perfect?"block":"none";
+  bumpCount();
+  const plate=document.getElementById("plate"); plate.style.display="block";
+  plate.scrollIntoView({behavior:"smooth",block:"start"});
+  if(perfect){playDing();confetti();}
+}
+document.getElementById("serve").onclick=serve;
+document.getElementById("reset").onclick=()=>{localStorage.removeItem("rinRamen");document.getElementById("today").textContent="0";document.getElementById("total").textContent="0";};
+renderBroths();renderNoodles();renderTops();renderSpice();
+(function(){const c=store();const t=(c.date===new Date().toDateString())?c.n:0;document.getElementById("today").textContent=t;document.getElementById("total").textContent=(c.total||0);})();
+</script>
+</body>
+</html>
